@@ -2,18 +2,18 @@
 import { useState } from "react";
 
 import ImageModal from "./imgModal";
-import { row1, row2, row3, row4 } from "./content.json";
+import content from "./content";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const images = row1.concat(row2, row3, row4);
+  const images = content.row1.concat(content.row2, content.row3, content.row4);
 
   return (
     <>
       <div className="flex flex-col md:flex-row items-center justify-center max-w-[screen-2]">
-        {row1.map((image, index) => (
+        {content.row1.map((image, index) => (
           <div
-            // className={styles.imageContainer}
+            key={index}
             onClick={() => setSelectedImage(index)}
             className="cursor-pointer bg-slate-700 px-[10%] md:px-[6.8%] mx-1 group hover:bg-slate-600 my-2"
           >
@@ -39,7 +39,7 @@ const Gallery = () => {
       </div>
 
       <div className="flex items-center justify-center max-w-[screen-2] my-2">
-        {row2.map((image, index) => (
+        {content.row2.map((image, index) => (
           <div
             key={index}
             onClick={() => setSelectedImage(index + 3)}
@@ -67,7 +67,7 @@ const Gallery = () => {
       </div>
 
       <div className="flex flex-col md:flex-row items-center  justify-center max-w-[screen]">
-        {row3.map((image, index) => (
+        {content.row3.map((image, index) => (
           <div
             key={index}
             onClick={() => setSelectedImage(index + 4)}
@@ -95,7 +95,7 @@ const Gallery = () => {
       </div>
 
       <div className="flex flex-col md:flex-row items-center  justify-center max-w-[screen]">
-        {row4.map((image, index) => (
+        {content.row4.map((image, index) => (
           <div
             key={index}
             onClick={() => setSelectedImage(index + 6)}
