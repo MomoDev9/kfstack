@@ -25,6 +25,7 @@ const ImageModal = ({ image, onClose, onNext, onPrevious }) => {
       contentLabel="Image Modal"
       className="relative w-[85%] items-center justify-center  "
       overlayClassName="fixed top-0 left-0 right-0 bottom-0 bg-black/50 flex items-center justify-center"
+      ariaHideApp={false}
     >
       <button
         onClick={onClose}
@@ -54,8 +55,8 @@ const ImageModal = ({ image, onClose, onNext, onPrevious }) => {
       <div className=" bg-white">
         <p className="text-2xl mt-5 font-bold ml-5">{image.title}</p>
         <div className="mt-2 mx-2">
-          {image.description.split("\n").map((n) => (
-            <p>{n}</p>
+          {image.description.split("\n").map((n, i) => (
+            <p key={i}>{n}</p>
           ))}
         </div>
       </div>
