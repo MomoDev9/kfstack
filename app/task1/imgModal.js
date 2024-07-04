@@ -51,7 +51,6 @@ const ImageModal = ({ image, onClose, onNext, onPrevious }) => {
           <FaArrowRight />
         </button>
       </div>
-      {/* <div className={styles.details}> */}
       <div className=" bg-white">
         <p className="text-2xl mt-5 font-bold ml-5">{image.title}</p>
         <div className="mt-2 mx-2">
