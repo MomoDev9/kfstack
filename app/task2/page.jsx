@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import prisma from "../../lib/prisma";
-import AddModal from "./component/modalAdd";
+import AddModal from "./components/modal";
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -27,16 +26,7 @@ export default function Home() {
       >
         +
       </div>
-      <div>
-        {showModal ? (
-          <AddModal
-            onClose={showAddModal}
-            onRequest={showAddModal}
-            type={"add"}
-          />
-        ) : null}
-        {/* {showModal ? <AddModal onClose={showModal} /> : null} */}
-      </div>
+      <div>{showModal ? <AddModal onClose={showAddModal} /> : null}</div>
     </>
   );
 }
