@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model account {
+  id       Int     @id @default(autoincrement())
+  name     String
+  username String  @unique
+  password String
+  sosmed   String?
+  blog     blog[]
+  blog_history blog_history[] // Account can have multiple history records
+}
+
+model blog {
+  id          Int        @id @default(autoincrement())
+  author_id    Int
+  title       String
+  subtitle    String?
+  content     String
+  banner      String?
+  thumbnail   String?
+  created_at   DateTime   @default(now())
+  account        account       @relation(fields: [author_id], references: [id])
+  blog_history blog_history[] // Blog can have multiple history records
+}
+
+model blog_history {
+  id          Int      @id @default(autoincrement())
+  blog_id      Int
+  author_id    Int
+  title       String?
+  subtitle    String?
+  content     String?
+  updated_at   DateTime @default(now())
+  change_type  String
+  blog        blog     @relation(fields: [blog_id], references: [id])
+  account        account     @relation(fields: [author_id], references: [id])
+  status      String? @default("test")
+}
+

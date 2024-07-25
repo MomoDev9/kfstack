@@ -39,3 +39,7 @@ next-env.d.ts
 # ssh
 *.pub
 kf
+.vercel
+
+#prisma
+prisma/migrations
