@@ -6,12 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "prisma-migrate": "prisma migrate dev",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
-  },
-  "prisma": {
-    "schema": "./prisma/schema.prisma"
+    "lint": "next lint"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
