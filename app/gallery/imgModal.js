@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Modal from "react-modal";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
+import Image from "next/image";
 
 const ImageModal = ({ image, onClose, onNext, onPrevious }) => {
   useEffect(() => {
@@ -40,7 +41,7 @@ const ImageModal = ({ image, onClose, onNext, onPrevious }) => {
         >
           <FaArrowLeft />
         </button>
-        <img
+        <Image
           src={image.src}
           alt={image.title}
           className="max-h-[80vh] w-3/4 md:max-w-[80vw]"

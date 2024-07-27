@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function OtherPost({ currentFile }) {
   const [files, setFiles] = useState([]);
@@ -33,7 +34,7 @@ export default function OtherPost({ currentFile }) {
             >
               <Link href={`/blog/${file.filename.replace(".md", "")}`}>
                 <div className="flex">
-                  <img
+                  <Image
                     src={file.thumbnail}
                     alt={file.title}
                     className="w-36 h-28 object-cover"

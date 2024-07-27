@@ -16,7 +16,7 @@ export default function MarkdownRenderer({ content }) {
          prose-h3:pl-3 prose-h3:border-blue-600  prose-h3:text-xl prose-h3:mt-5 prose-h3:mb-1
 `}
     >
-      <Markdown children={content} />
+      <Markdown>{content}</Markdown>
     </div>
   );
 }

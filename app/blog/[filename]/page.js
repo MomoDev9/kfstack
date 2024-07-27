@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import matter from "gray-matter";
+import Image from "next/image";
 
 import Header from "../../components/header";
 import MarkdownRenderer from "../components/markdownRenderer";
@@ -39,7 +40,7 @@ export default function PostPage() {
       <Header />
       <div className="flex flex-col mx-0 px-4 bg-violet-200">
         <div className="flex w-full bg-red-700 bg-opacity-40 mt-1">
-          <img
+          <Image
             src={banner}
             alt={title}
             className=" h-[300px] object-contain  mx-auto"
