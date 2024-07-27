@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VscEdit } from "react-icons/vsc";
-import Image from "next/image";
 
 import Header from "../components/header";
 import Modal from "./components/modal";
@@ -66,7 +65,7 @@ export default function Home() {
           {files.map((file) => (
             <li key={file.filename}>
               <Link href={`/blog/${file.filename.replace(".md", "")}`}>
-                <Image
+                <i
                   src={file.thumbnail}
                   alt={file.title}
                   className="w-[200px] h-40 object-cover rounded-t-xl hover:rounded-none hover:scale-125 transition-transform duration-300"
