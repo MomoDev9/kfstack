@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import slugify from "slugify";
 
 const markdownDir = path.join(process.cwd(), "markdowns");
 
@@ -27,22 +28,24 @@ export async function GET() {
 
 export async function POST(request) {
   const createdAt = new Date().toISOString();
-  const { filename, author, title, subtitle, content, banner, thumbnail } =
-    await request.json();
-  if (!filename || !author || !title || !content) {
+  const { author, title, content, banner, thumbnail } = await request.json();
+  if (!author || !title || !content) {
     return NextResponse.json(
       { error: "Filename, author, title, and content are required" },
       { status: 400 }
     );
   }
+  let filename = slugify(title, { lower: true, strict: true });
+  let minicontent =
+    content.substring(0, 100).replace(/[^a-zA-Z0-9 ]/g, "") + "...";
   const filePath = path.join(markdownDir, `${filename}.md`);
   const fileContent = matter.stringify(content, {
     author,
     title,
-    subtitle,
     banner,
     thumbnail,
     createdAt,
+    minicontent,
   });
   try {
     fs.writeFileSync(filePath, fileContent);
