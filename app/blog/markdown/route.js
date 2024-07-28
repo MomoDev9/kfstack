@@ -6,6 +6,9 @@ import slugify from "slugify";
 
 const markdownDir = "tmp/markdowns";
 
+if (!fs.existsSync(markdownDir)) {
+  fs.mkdirSync(markdownDir, { recursive: true });
+}
 export async function GET() {
   try {
     const files = fs.readdirSync(markdownDir).map((file) => {
