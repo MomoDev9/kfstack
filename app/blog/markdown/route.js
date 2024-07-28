@@ -4,7 +4,7 @@ import path from "path";
 import matter from "gray-matter";
 import slugify from "slugify";
 
-const markdownDir = path.join(process.cwd(), "markdowns");
+const markdownDir = path.join(process.cwd(), "tmp/markdowns");
 
 export async function GET() {
   try {

@@ -41,5 +41,5 @@ next-env.d.ts
 kf
 .vercel
 
-#prisma
-prisma/migrations
+# markdown
+/markdowns/*.md

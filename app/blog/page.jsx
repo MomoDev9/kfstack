@@ -65,7 +65,7 @@ export default function Home() {
           {files.map((file) => (
             <li key={file.filename}>
               <Link href={`/blog/${file.filename.replace(".md", "")}`}>
-                <i
+                <img
                   src={file.thumbnail}
                   alt={file.title}
                   className="w-[200px] h-40 object-cover rounded-t-xl hover:rounded-none hover:scale-125 transition-transform duration-300"
