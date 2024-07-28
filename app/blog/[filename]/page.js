@@ -22,7 +22,7 @@ export default function PostPage() {
     try {
       const res = await fetch(`/blog/markdown/${filename}`);
       const data = await res.json();
-      setFile(data.content);
+      setFile(data);
     } catch (error) {
       console.error("Failed to fetch markdown file", error);
     }

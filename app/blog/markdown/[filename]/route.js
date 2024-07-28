@@ -1,50 +1,41 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import axios from "axios";
 import matter from "gray-matter";
 
-const markdownDir = path.join(process.cwd(), "markdowns");
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_OWNER = process.env.GITHUB_OWNER;
+const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
+
+const headers = {
+  Authorization: `token ${GITHUB_TOKEN}`,
+  Accept: "application/vnd.github.v3+json",
+};
 
 export async function GET(request, { params }) {
   const { filename } = params;
-  const filePath = path.join(markdownDir, `${filename}.md`);
+
+  if (!filename) {
+    return NextResponse.json(
+      { error: "Filename is required" },
+      { status: 400 }
+    );
+  }
 
   try {
-    const content = fs.readFileSync(filePath, "utf8");
-    return NextResponse.json({ content }, { status: 200 });
+    const fileUrl = `${GITHUB_API_URL}/${filename}.md?ref=main`;
+    const response = await axios.get(fileUrl, { headers });
+    const fileContent = Buffer.from(response.data.content, "base64").toString(
+      "utf8"
+    );
+    const { data, content } = matter(fileContent);
+
+    return NextResponse.json({ data, content }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "File not found" }, { status: 404 });
-  }
-}
-
-export async function PUT(request, { params }) {
-  const { filename } = params;
-  const { author, title, subtitle, content, banner, thumbnail } =
-    await request.json();
-  const filePath = path.join(markdownDir, `${filename}.md`);
-
-  if (!content) {
-    return NextResponse.json({ error: "Content is required" }, { status: 400 });
-  }
-
-  if (fs.existsSync(filePath)) {
-    const fileContent = matter.stringify(content, {
-      author,
-      title,
-      subtitle,
-      banner,
-      thumbnail,
-    });
-    try {
-      fs.writeFileSync(filePath, fileContent);
-      return NextResponse.json({ message: "File updated" }, { status: 200 });
-    } catch (error) {
-      return NextResponse.json(
-        { error: "Failed to update markdown file" },
-        { status: 500 }
-      );
-    }
-  } else {
-    return NextResponse.json({ error: "File not found" }, { status: 404 });
+    console.error(error);
+    return NextResponse.json(
+      { error: "Failed to fetch file content" },
+      { status: 500 }
+    );
   }
 }

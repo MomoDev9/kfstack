@@ -1,29 +1,42 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import slugify from "slugify";
+import axios from "axios";
 
-const markdownDir = "tmp/markdowns/";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_OWNER = process.env.GITHUB_OWNER;
+const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
-if (!fs.existsSync(markdownDir)) {
-  fs.mkdirSync(markdownDir, { recursive: true });
-}
+const headers = {
+  Authorization: `token ${GITHUB_TOKEN}`,
+  Accept: "application/vnd.github.v3+json",
+};
 export async function GET() {
   try {
-    const files = fs.readdirSync(markdownDir).map((file) => {
-      const filePath = path.join(markdownDir, file);
-      const content = fs.readFileSync(filePath, "utf8");
-      const { data } = matter(content);
-      return {
-        filename: file,
-        ...data,
-      };
-    });
+    const response = await axios.get(GITHUB_API_URL, { headers });
+
+    const files = await Promise.all(
+      response.data.map(async (file) => {
+        const fileResponse = await axios.get(file.download_url);
+        const { data } = matter(fileResponse.data);
+        return {
+          filename: file.name,
+          path: file.path,
+          thumbnail: data.thumbnail || "",
+        };
+      })
+    );
     return NextResponse.json(files, { status: 200 });
   } catch (error) {
+    console.error(
+      "Failed to fetch files",
+      error.response ? error.response.data : error.message
+    );
+
     return NextResponse.json(
-      { error: "Failed to read markdown files" },
+      { error: "Failed to fetch files" },
       { status: 500 }
     );
   }
