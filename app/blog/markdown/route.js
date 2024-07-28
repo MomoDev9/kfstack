@@ -4,7 +4,7 @@ import path from "path";
 import matter from "gray-matter";
 import slugify from "slugify";
 
-const markdownDir = "tmp/markdowns";
+const markdownDir = "tmp/markdowns/";
 
 if (!fs.existsSync(markdownDir)) {
   fs.mkdirSync(markdownDir, { recursive: true });
