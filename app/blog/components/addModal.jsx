@@ -85,12 +85,6 @@ export default function Home({ onClose }) {
               language="en-US"
               onSave={() => createFile()}
             />
-            {/* <textarea
-                  placeholder="Content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="bg-violet-200 text-black border-spacing-1 border-2 rounded-lg w-full border-neutral-300 my-2 p-2"
-                /> */}
           </div>
           <div className="flex my-3 justify-end">
             <button

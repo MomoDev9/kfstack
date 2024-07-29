@@ -3,42 +3,70 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VscEdit } from "react-icons/vsc";
+import toast, { Toaster } from "react-hot-toast";
 
 import Header from "../components/header";
-import Modal from "./components/modal";
+import Modal from "./components/addModal";
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
+  const [showAModal, setShowAModal] = useState(false);
+  const [showUModal, setShowUModal] = useState(false);
+  const [showDModal, setShowDModal] = useState(false);
   const [files, setFiles] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [refresh]);
+
   function showAddModal() {
-    if (!showModal) {
+    if (!showAModal) {
       document
         .getElementsByTagName("html")[0]
         .classList.add("overflow-y-hidden");
-      setShowModal(true);
+      setShowAModal(true);
     } else {
       document
         .getElementsByTagName("html")[0]
         .classList.remove("overflow-y-hidden");
-      setShowModal(false);
+      setShowAModal(false);
     }
   }
   function showEditModal() {
-    if (!showModal) {
+    if (!showUModal) {
       document
         .getElementsByTagName("html")[0]
         .classList.add("overflow-y-hidden");
-      setShowModal(true);
+      setShowUModal(true);
     } else {
       document
         .getElementsByTagName("html")[0]
         .classList.remove("overflow-y-hidden");
-      setShowModal(false);
+      setShowUModal(false);
     }
   }
-  useEffect(() => {
-    fetchFiles();
-  }, []);
+  const deletePost = async (filename, sha) => {
+    try {
+      const response = await fetch("/blog/markdown", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filename, sha }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete post");
+      }
+
+      const result = await response.json();
+      toast.success("File deleted successfully");
+      setRefresh((prev) => !prev);
+      console.log(result);
+    } catch (error) {
+      toast.error("" + error);
+    }
+  };
 
   const fetchFiles = async () => {
     const res = await fetch("/blog/markdown");
@@ -50,6 +78,7 @@ export default function Home() {
       console.error("Expected an array but got", data);
     }
   };
+
   return (
     <div className="flex flex-col bg-violet-200 min-h-screen">
       <Header />
@@ -78,7 +107,7 @@ export default function Home() {
                 <VscEdit className="h-10 w-[100px]" />
               </button>
               <button
-                onClick={showEditModal}
+                onClick={deletePost.bind(null, file.filename, file.sha)}
                 className="bg-red-300 rounded-br-xl text-2xl hover:bg-red-500"
               >
                 <RiDeleteBin6Line className="h-10 w-[100px]" />
@@ -87,7 +116,9 @@ export default function Home() {
           ))}
         </ul>
       </div>
-      <div>{showModal ? <Modal onClose={showAddModal} /> : null}</div>
+      <div>{showAModal ? <Modal onClose={showAddModal} /> : null}</div>
+      <div>{showUModal ? <Modal onClose={showEditModal} /> : null}</div>
+      <Toaster />
     </div>
   );
 }

@@ -25,6 +25,7 @@ export async function GET() {
           filename: file.name,
           path: file.path,
           thumbnail: data.thumbnail || "",
+          sha: file.sha,
         };
       })
     );
@@ -47,28 +48,107 @@ export async function POST(request) {
   const { author, title, content, banner, thumbnail } = await request.json();
   if (!author || !title || !content) {
     return NextResponse.json(
-      { error: "Filename, author, title, and content are required" },
+      { error: "Author, title, and content are required" },
       { status: 400 }
     );
   }
+
   let filename = slugify(title, { lower: true, strict: true });
-  let minicontent =
-    content.substring(0, 100).replace(/[^a-zA-Z0-9 ]/g, "") + "...";
-  const filePath = path.join(markdownDir, `${filename}.md`);
+  const filePath = `${filename}.md`;
+
   const fileContent = matter.stringify(content, {
     author,
     title,
     banner,
     thumbnail,
     createdAt,
-    minicontent,
   });
+
+  const fileContentEncoded = Buffer.from(fileContent).toString("base64");
+
   try {
-    fs.writeFileSync(filePath, fileContent);
+    await axios.put(
+      `${GITHUB_API_URL}/${filePath}`,
+      {
+        message: `Create ${filename}.md`,
+        content: fileContentEncoded,
+      },
+      { headers }
+    );
     return NextResponse.json({ message: "File created" }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create markdown file" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request) {
+  const updatedAt = new Date().toISOString();
+  const { author, title, content, banner, thumbnail, sha } =
+    await request.json();
+  if (!author || !title || !content || !sha) {
+    return NextResponse.json(
+      { error: "Author, title, content, and sha are required" },
+      { status: 400 }
+    );
+  }
+
+  let filename = slugify(title, { lower: true, strict: true });
+  const filePath = `${filename}.md`;
+
+  const fileContent = matter.stringify(content, {
+    author,
+    title,
+    banner,
+    thumbnail,
+    updatedAt,
+  });
+
+  const fileContentEncoded = Buffer.from(fileContent).toString("base64");
+
+  try {
+    await axios.put(
+      `${GITHUB_API_URL}/${filePath}`,
+      {
+        message: `Update ${filename}.md`,
+        content: fileContentEncoded,
+        sha,
+      },
+      { headers }
+    );
+    return NextResponse.json({ message: "File updated" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to update markdown file" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request) {
+  const { filename, sha } = await request.json();
+  if (!filename || !sha) {
+    return NextResponse.json(
+      { error: "Filename and SHA are required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await axios.delete(`${GITHUB_API_URL}/${filename}`, {
+      headers,
+      data: {
+        message: `Delete ${filename}`,
+        sha,
+      },
+    });
+    return NextResponse.json({ message: "File deleted" }, { status: 200 });
+  } catch (error) {
+    console.error("Failed to delete markdown file:", error);
+    return NextResponse.json(
+      { error: "Failed to delete markdown file" },
       { status: 500 }
     );
   }
