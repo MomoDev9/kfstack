@@ -25,11 +25,11 @@ export default function Home({ onClose, setRefresh }) {
       }),
     });
     if (res.ok) {
-      toast.success("Post created successfully");
+      toast.success("Successfully created " + title + " post.");
       onClose();
       setRefresh((prev) => !prev);
     } else {
-      toast.error("Failed to create markdown file.");
+      toast.error("Failed to create " + title + " post.");
     }
   };
 

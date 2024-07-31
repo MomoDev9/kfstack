@@ -19,7 +19,8 @@ export default function DeleteModal({ delFile, onClose, setRefresh }) {
       onClose();
       setRefresh((prev) => !prev);
     } catch (error) {
-      toast.error("" + error);
+      console.error(error);
+      toast.error("failed to delete " + filename + " post");
     }
   };
 
