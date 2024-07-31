@@ -9,7 +9,6 @@ export default function OtherPost({ currentFile }) {
     const fetchFiles = async () => {
       const res = await fetch("/blog/markdown");
       const data = await res.json();
-      // console.log(data);
       if (Array.isArray(data)) {
         setFiles(data);
       } else {
@@ -39,8 +38,8 @@ export default function OtherPost({ currentFile }) {
                     className="w-36 h-28 object-cover"
                   />
                   <div className="ml-3 flex flex-col mt-2">
-                    <span className="text-lg font-bold">{file.title}</span>
-                    <span className="text-sm">{file.minicontent}</span>
+                    <span className="text-lg font-bold ">{file.title}</span>
+                    <span className="text-sm">{file.miniContent}</span>
                   </div>
                 </div>
               </Link>

@@ -5,7 +5,7 @@ import { MdEditor, ModalToolbar } from "md-editor-rt";
 import { Toaster, toast } from "react-hot-toast";
 import "md-editor-rt/lib/style.css";
 
-export default function Home({ onClose }) {
+export default function Home({ onClose, setRefresh }) {
   const [author, setAuthor] = useState("MomoDev");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -26,6 +26,8 @@ export default function Home({ onClose }) {
     });
     if (res.ok) {
       toast.success("Post created successfully");
+      onClose();
+      setRefresh((prev) => !prev);
     } else {
       toast.error("Failed to create markdown file.");
     }

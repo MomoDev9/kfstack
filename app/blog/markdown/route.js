@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import slugify from "slugify";
 import axios from "axios";
+import { title } from "process";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO;
@@ -24,15 +25,17 @@ export async function GET() {
         return {
           filename: file.name,
           path: file.path,
-          thumbnail: data.thumbnail || "",
           sha: file.sha,
+          title: data.title || "",
+          thumbnail: data.thumbnail || "",
+          miniContent: data.miniContent || "",
         };
       })
     );
     return NextResponse.json(files, { status: 200 });
   } catch (error) {
     console.error(
-      "Failed to fetch files",
+      "Failed to fetch all files",
       error.response ? error.response.data : error.message
     );
 
@@ -56,12 +59,19 @@ export async function POST(request) {
   let filename = slugify(title, { lower: true, strict: true });
   const filePath = `${filename}.md`;
 
+  let miniContent =
+    content.substring(0, 100).replace(/[^a-zA-Z0-9 ]/g, "") + "...";
+  if (miniContent.length < content.length) {
+    miniContent += "...";
+  }
+
   const fileContent = matter.stringify(content, {
     author,
     title,
     banner,
     thumbnail,
     createdAt,
+    miniContent,
   });
 
   const fileContentEncoded = Buffer.from(fileContent).toString("base64");
@@ -84,9 +94,9 @@ export async function POST(request) {
   }
 }
 
-export async function PATCH(request) {
+export async function PUT(request) {
   const updatedAt = new Date().toISOString();
-  const { author, title, content, banner, thumbnail, sha } =
+  const { author, title, content, banner, thumbnail, sha, filename } =
     await request.json();
   if (!author || !title || !content || !sha) {
     return NextResponse.json(
@@ -94,9 +104,13 @@ export async function PATCH(request) {
       { status: 400 }
     );
   }
-
-  let filename = slugify(title, { lower: true, strict: true });
   const filePath = `${filename}.md`;
+
+  let miniContent =
+    content.substring(0, 100).replace(/[^a-zA-Z0-9 ]/g, "") + "...";
+  if (miniContent.length < content.length) {
+    miniContent += "...";
+  }
 
   const fileContent = matter.stringify(content, {
     author,
@@ -104,6 +118,7 @@ export async function PATCH(request) {
     banner,
     thumbnail,
     updatedAt,
+    miniContent,
   });
 
   const fileContentEncoded = Buffer.from(fileContent).toString("base64");
@@ -141,10 +156,13 @@ export async function DELETE(request) {
       headers,
       data: {
         message: `Delete ${filename}`,
-        sha,
+        sha: sha,
       },
     });
-    return NextResponse.json({ message: "File deleted" }, { status: 200 });
+    return NextResponse.json(
+      { message: "File " + filename + " deleted" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Failed to delete markdown file:", error);
     return NextResponse.json(

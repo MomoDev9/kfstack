@@ -6,72 +6,40 @@ import { VscEdit } from "react-icons/vsc";
 import toast, { Toaster } from "react-hot-toast";
 
 import Header from "../components/header";
-import Modal from "./components/addModal";
+import AModal from "./components/addModal";
+import UModal from "./components/updateModal";
+import DModal from "./components/deleteModal";
 
 export default function Home() {
+  const [showUser, setUser] = useState("MomoDev");
   const [showAModal, setShowAModal] = useState(false);
   const [showUModal, setShowUModal] = useState(false);
   const [showDModal, setShowDModal] = useState(false);
   const [files, setFiles] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [updateData, setUpdateData] = useState(null);
 
   useEffect(() => {
     fetchFiles();
   }, [refresh]);
 
   function showAddModal() {
-    if (!showAModal) {
-      document
-        .getElementsByTagName("html")[0]
-        .classList.add("overflow-y-hidden");
-      setShowAModal(true);
-    } else {
-      document
-        .getElementsByTagName("html")[0]
-        .classList.remove("overflow-y-hidden");
-      setShowAModal(false);
-    }
+    setShowAModal(!showAModal);
   }
-  function showEditModal() {
-    if (!showUModal) {
-      document
-        .getElementsByTagName("html")[0]
-        .classList.add("overflow-y-hidden");
-      setShowUModal(true);
-    } else {
-      document
-        .getElementsByTagName("html")[0]
-        .classList.remove("overflow-y-hidden");
-      setShowUModal(false);
-    }
+
+  function showEditModal(filename) {
+    setUpdateData(filename);
+    setShowUModal(!showUModal);
   }
-  const deletePost = async (filename, sha) => {
-    try {
-      const response = await fetch("/blog/markdown", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ filename, sha }),
-      });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete post");
-      }
-
-      const result = await response.json();
-      toast.success("File deleted successfully");
-      setRefresh((prev) => !prev);
-      console.log(result);
-    } catch (error) {
-      toast.error("" + error);
-    }
-  };
+  function showDeleteModal(file) {
+    setUpdateData(file);
+    setShowDModal(!showDModal);
+  }
 
   const fetchFiles = async () => {
     const res = await fetch("/blog/markdown");
     const data = await res.json();
-    // console.log(data);
     if (Array.isArray(data)) {
       setFiles(data);
     } else {
@@ -101,23 +69,51 @@ export default function Home() {
                 />
               </Link>
               <button
-                onClick={showEditModal}
+                onClick={() => showEditModal(file.filename.replace(".md", ""))}
                 className="bg-green-300 rounded-bl-xl text-xl hover:bg-green-500"
               >
                 <VscEdit className="h-10 w-[100px]" />
               </button>
               <button
-                onClick={deletePost.bind(null, file.filename, file.sha)}
+                // onClick={deletePost.bind(null, file.filename, file.sha)}
+                onClick={() =>
+                  showDeleteModal({
+                    filename: file.filename,
+                    sha: file.sha,
+                  })
+                }
                 className="bg-red-300 rounded-br-xl text-2xl hover:bg-red-500"
               >
                 <RiDeleteBin6Line className="h-10 w-[100px]" />
               </button>
+              <div></div>
             </li>
           ))}
         </ul>
       </div>
-      <div>{showAModal ? <Modal onClose={showAddModal} /> : null}</div>
-      <div>{showUModal ? <Modal onClose={showEditModal} /> : null}</div>
+      <div>
+        {showAModal ? (
+          <AModal onClose={showAddModal} setRefresh={setRefresh} />
+        ) : null}
+      </div>
+      <div>
+        {showUModal && updateData && (
+          <UModal
+            onClose={showEditModal}
+            setRefresh={setRefresh}
+            filename={updateData}
+          />
+        )}
+      </div>
+      <div>
+        {showDModal ? (
+          <DModal
+            onClose={showDeleteModal}
+            delFile={updateData}
+            setRefresh={setRefresh}
+          />
+        ) : null}
+      </div>
       <Toaster />
     </div>
   );

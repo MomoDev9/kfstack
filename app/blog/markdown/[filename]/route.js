@@ -30,7 +30,10 @@ export async function GET(request, { params }) {
     );
     const { data, content } = matter(fileContent);
 
-    return NextResponse.json({ data, content }, { status: 200 });
+    return NextResponse.json(
+      { data, content, sha: response.data.sha },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
