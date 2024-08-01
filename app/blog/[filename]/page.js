@@ -33,7 +33,7 @@ export default function PostPage() {
   }
 
   const { data, content } = matter(file);
-  const { author, title, createdAt, banner } = data;
+  const { author, title, createdAt, banner, updatedAt } = data;
   return (
     <>
       <Header />
@@ -49,7 +49,10 @@ export default function PostPage() {
           <div className="w-full md:w-3/4">
             <h1 className="text-3xl font-bold mb-2">{title}</h1>
             <h3 className="text-sm text-neutral-500 mb-10">
-              By: {author} - {Date(createdAt)}
+              By: {author} -{" "}
+              {updatedAt
+                ? `Last updated on ${new Date(updatedAt).toLocaleDateString()}`
+                : `Created on ${new Date(createdAt).toLocaleDateString()}`}
             </h3>
             <MarkdownRenderer content={content} />
           </div>

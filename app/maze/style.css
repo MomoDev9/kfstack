@@ -1,0 +1,31 @@
+table,
+th,
+td {
+  border: 1px solid #11191f;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  background-color: #11191f;
+}
+
+.path {
+  background: white;
+}
+
+.blok {
+  background: grey;
+}
+
+.bonus {
+  background: yellow;
+}
+
+.finish {
+  background: red;
+}
+
+.character {
+  background: blue;
+}
