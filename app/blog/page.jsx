@@ -3,9 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VscEdit } from "react-icons/vsc";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
-import Header from "../components/header";
 import AModal from "./components/addModal";
 import UModal from "./components/updateModal";
 import DModal from "./components/deleteModal";
@@ -48,8 +47,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col bg-violet-200 min-h-screen">
-      <Header />
+    <div className="flex flex-col bg-violet-200 min-h-[85vh]">
       <div
         className="flex cursor-pointer mx-auto bg-indigo-300 p-5 text-white text-lg font-bold my-10 ml-5"
         onClick={showAddModal}

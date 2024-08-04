@@ -34,6 +34,25 @@ export default function Home() {
     renderGrid();
   }, [grid]);
 
+  useEffect(() => {
+    const arrowKeys = (e) => {
+      if (e.keyCode === 37 || e.keyCode === 65) {
+        handleLeft();
+      } else if (e.keyCode === 38 || e.keyCode === 87) {
+        handleUp();
+      } else if (e.keyCode === 39 || e.keyCode === 68) {
+        handleRight();
+      } else if (e.keyCode === 40 || e.keyCode === 83) {
+        handleDown();
+      }
+    };
+
+    document.addEventListener("keydown", arrowKeys);
+    return () => {
+      document.removeEventListener("keydown", arrowKeys);
+    };
+  }, [col, row]);
+
   function renderGrid() {
     const blockType = ["blok", "path", "bonus", "finish", "character"];
     const tableBody = document.querySelector("tbody");
@@ -125,7 +144,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container container-flex w-1/2 mx-auto mt-20">
+    <div className="container container-flex w-1/2 mx-auto mt-20 min-h-[screen-3]">
       <h2 className="text-3xl text-right"> Score: {score}</h2>
       <table
         className="border-collapse border border-gray-800 table mx-auto"
@@ -162,6 +181,12 @@ export default function Home() {
         >
           Right
         </button>
+      </div>
+      <div className="flex justify-center items-center mt-16 ">
+        <span className="p-5 bg-red-500" /> = finish
+        <span className="p-5 bg-blue-500 ml-5" /> = you
+        <span className="p-5 bg-yellow-500 ml-5" /> = bonus
+        <span className="p-5 bg-gray-500 ml-5" /> = wall
       </div>
       <Toaster position="top-center" />
     </div>
