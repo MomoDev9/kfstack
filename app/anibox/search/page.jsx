@@ -11,7 +11,6 @@ export default function Search() {
   const [error, setError] = useState(null);
   const q = useSearchParams().get("q");
 
-  document.title = `Search ${q} - Anibox`;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,6 +24,7 @@ export default function Search() {
     };
 
     fetchData();
+    document.title = `Search ${q} - Anibox`;
   }, []);
   const fetchSearchResults = async (q) => {
     const response = await axios.get(

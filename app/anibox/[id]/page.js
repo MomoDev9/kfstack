@@ -11,8 +11,6 @@ export default function Details() {
 
   const { id } = useParams();
 
-  document.title = data?.title.romaji.toLowerCase() + " - Anibox" || "Anibox";
-
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
@@ -31,6 +29,8 @@ export default function Details() {
       fetchData();
     }
   }, [id]);
+
+  document.title = data?.title.romaji.toLowerCase() + " - Anibox" || "Anibox";
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
