@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Carousel({ items }) {
   const [index, setIndex] = useState(0);
@@ -26,27 +27,32 @@ export default function Carousel({ items }) {
     <div className="relative">
       <div className="relative h-96 overflow-hidden md:h-96 bg-black">
         {items.map((item, i) => (
-          <div
-            key={i}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out  ${
-              i !== index ? "hidden" : ""
-            }`}
-          >
-            <img
-              src={
-                item.bannerImage ||
-                "https://via.placeholder.com/800x600?text=No+Image"
-              }
-              alt={item.title.romaji}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-4">
-              <h2 className="text-2xl font-bold">
-                {item.title.english ? item.title.english : item.title.romaji}
-              </h2>
-              <div dangerouslySetInnerHTML={{ __html: item.description }} />
+          <Link href={`/anibox/${item.id}`} key={i}>
+            <div
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out  ${
+                i !== index ? "hidden" : ""
+              }`}
+            >
+              <img
+                src={
+                  item.bannerImage ||
+                  "https://via.placeholder.com/800x600?text=No+Image"
+                }
+                alt={item.title.romaji}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-4">
+                <h2 className="text-2xl font-bold">
+                  {item.title.english ? item.title.english : item.title.romaji}
+                </h2>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: item.description.substring(0, 150) + "...",
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
       <button

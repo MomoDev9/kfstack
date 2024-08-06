@@ -1,13 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-import Head from "next/head";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Carousel from "./components/Carousel";
-import Section from "./components/Section";
 import axios from "axios";
+
+import Carousel from "./comp/carousel";
+import Section from "./comp/section";
 
 export default function Home() {
   const [banner, setBanner] = useState([]);
@@ -22,7 +19,7 @@ export default function Home() {
         const data = res.data;
 
         setTrending(data);
-        setBanner(data.slice(1, 6));
+        setBanner(data.slice(0, 5));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -32,15 +29,10 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      <Head>
-        <title>AniBox</title>
-      </Head>
-      <Header />
       <main>
         <Carousel items={banner} />
         <Section name="Trending" data={trending} />
       </main>
-      <Footer />
     </div>
   );
 }

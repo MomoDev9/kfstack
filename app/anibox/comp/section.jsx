@@ -1,5 +1,3 @@
-// components/Section.js
-
 export default function Section({ name, data }) {
   return (
     <div className="mt-8">
