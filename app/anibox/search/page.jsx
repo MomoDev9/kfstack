@@ -74,44 +74,42 @@ export default function Search() {
       </div>
     );
   return (
-    <Suspense fallback={loading}>
-      <div className="bg-black text-white min-h-screen">
-        <main className="px-16 pt-16 relative w-full">
-          <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
-            Search result for {q}
-          </h1>
-          <h2 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
-            Page : {p}
-          </h2>
-          <div
-            id="result-container"
-            className="grid gap-y-10 justify-between gap-x-3 mt-10 mb-10"
-            style={{ gridTemplateColumns: "repeat(auto-fill, 14rem)" }}
+    <div className="bg-black text-white min-h-screen">
+      <main className="px-16 pt-16 relative w-full">
+        <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
+          Search result for {q}
+        </h1>
+        <h2 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
+          Page : {p}
+        </h2>
+        <div
+          id="result-container"
+          className="grid gap-y-10 justify-between gap-x-3 mt-10 mb-10"
+          style={{ gridTemplateColumns: "repeat(auto-fill, 14rem)" }}
+        >
+          {results.map((result) => (
+            <Card
+              key={result.id}
+              item={result}
+              title={result.title.romaji || result.title.english}
+            />
+          ))}
+        </div>
+        <div className="flex justify-center mx-auto">
+          <button
+            onClick={prev}
+            className={p === 1 ? "hidden font-bold" : "font-bold"}
           >
-            {results.map((result) => (
-              <Card
-                key={result.id}
-                item={result}
-                title={result.title.romaji || result.title.english}
-              />
-            ))}
-          </div>
-          <div className="flex justify-center mx-auto">
-            <button
-              onClick={prev}
-              className={p === 1 ? "hidden font-bold" : "font-bold"}
-            >
-              Previous
-            </button>
-            <span className="mx-4 bg-gray-200 p-1 text-black rounded-xl">
-              Page : {p}
-            </span>
-            <button onClick={next} className="font-bold">
-              Next
-            </button>
-          </div>
-        </main>
-      </div>
-    </Suspense>
+            Previous
+          </button>
+          <span className="mx-4 bg-gray-200 p-1 text-black rounded-xl">
+            Page : {p}
+          </span>
+          <button onClick={next} className="font-bold">
+            Next
+          </button>
+        </div>
+      </main>
+    </div>
   );
 }
