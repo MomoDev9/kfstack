@@ -1,6 +1,6 @@
 export default function Section({ name, data }) {
   return (
-    <div className="mt-8">
+    <div className="mt-1">
       <h2 className="text-2xl font-bold text-white mb-4">{name}</h2>
       <div
         id={`${name.toLowerCase()}-container`}
@@ -20,7 +20,7 @@ export default function Section({ name, data }) {
         ))}
       </div>
       <button
-        className="mt-4"
+        className="ml-5 mt-4"
         data-carousel-prev
         onClick={() =>
           (document.getElementById(

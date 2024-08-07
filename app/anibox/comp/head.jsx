@@ -38,7 +38,7 @@ export default function Head() {
   return (
     <nav className="bg-black border-gray-200 py-4">
       <div className="mx-16 flex flex-wrap items-center justify-between">
-        <Link href="/" className="flex items-center">
+        <Link href="/anibox" className="flex items-center">
           <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
             AniBox
           </span>
