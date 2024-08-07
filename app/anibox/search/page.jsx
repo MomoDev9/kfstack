@@ -74,8 +74,8 @@ export default function Search() {
       </div>
     );
   return (
-    <div className="bg-black text-white min-h-screen">
-      <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={loading}>
+      <div className="bg-black text-white min-h-screen">
         <main className="px-16 pt-16 relative w-full">
           <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
             Search result for {q}
@@ -83,7 +83,6 @@ export default function Search() {
           <h2 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-700 dark:text-white">
             Page : {p}
           </h2>
-          {/* <SearchCard item={results} /> */}
           <div
             id="result-container"
             className="grid gap-y-10 justify-between gap-x-3 mt-10 mb-10"
@@ -112,7 +111,7 @@ export default function Search() {
             </button>
           </div>
         </main>
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   );
 }
