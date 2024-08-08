@@ -182,7 +182,7 @@ export default function Home() {
           Right
         </button>
       </div>
-      <div className="flex justify-center items-center mt-16 ">
+      <div className="flex justify-center items-center mt-16 mb-16">
         <span className="p-5 bg-red-500" /> = finish
         <span className="p-5 bg-blue-500 ml-5" /> = you
         <span className="p-5 bg-yellow-500 ml-5" /> = bonus

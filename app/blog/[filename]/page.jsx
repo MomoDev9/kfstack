@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import matter from "gray-matter";
 
-import Header from "../../components/header";
 import MarkdownRenderer from "../components/markdownRenderer";
 import OtherPosts from "../components/otherPost";
+import Head from "next/head";
 
 export default function PostPage() {
   const { filename } = useParams();
@@ -23,6 +23,7 @@ export default function PostPage() {
       const res = await fetch(`/blog/markdown/${filename}`);
       const data = await res.json();
       setFile(data);
+      document.title = data.data.title;
     } catch (error) {
       console.error("Failed to fetch markdown file", error);
     }
@@ -36,7 +37,9 @@ export default function PostPage() {
   const { author, title, createdAt, banner, updatedAt } = data;
   return (
     <>
-      <Header />
+      <Head>
+        <title>{title} - Blog</title>
+      </Head>
       <div className="flex flex-col mx-0 px-4 bg-violet-200">
         <div className="flex w-full bg-red-700 bg-opacity-40 mt-1">
           <img
