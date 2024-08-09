@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import Head from "next/head";
 import axios from "axios";
 
+import Loading from "../../components/loading";
+
 export default function Details() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,7 @@ export default function Details() {
 
   document.title = data?.title.romaji.toLowerCase() + " - Anibox" || "Anibox";
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data found</p>;
 

@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Card from "../comp/card";
+import Loading from "../../components/loading";
 
 export default function Search() {
   const [results, setResults] = useState([]);
@@ -42,12 +43,7 @@ export default function Search() {
     setP(p - 1);
   };
 
-  if (loading)
-    return (
-      <p className="text-center text-white text-3xl bg-black h-screen">
-        Loading...
-      </p>
-    );
+  if (loading) return <Loading />;
   if (error)
     return (
       <p className="text-center text-white text-3xl bg-black h-screen">

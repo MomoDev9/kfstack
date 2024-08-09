@@ -6,6 +6,7 @@ import axios from "axios";
 
 import Carousel from "./comp/carousel";
 import Section from "./comp/section";
+import Loading from "../components/loading";
 
 export default function Home() {
   const [banner, setBanner] = useState([]);
@@ -14,6 +15,7 @@ export default function Home() {
   const [top, setTop] = useState([]);
   const [newest, setNewest] = useState([]);
   const [selectedSection, setSelectedSection] = useState("Trending");
+  const [loading, setLoading] = useState(true);
 
   const listSection = [
     { name: "Trending", data: trending },
@@ -46,6 +48,7 @@ export default function Home() {
           "https://animeapi-askiahnur1.b4a.run/anime?sort=newest"
         );
         setNewest(newestRes.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -55,6 +58,10 @@ export default function Home() {
 
   const sectionData =
     listSection.find((section) => section.name === selectedSection)?.data || [];
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className="bg-black text-white min-h-screen">
       <main>

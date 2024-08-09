@@ -1,12 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import ImageModal from "./imgModal";
 import content from "./content";
+import Loading from "../components/loading";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const images = content.row1.concat(content.row2, content.row3, content.row4);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setLoading(false);
+    }
+  }, [images]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

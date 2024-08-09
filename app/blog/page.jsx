@@ -8,9 +8,11 @@ import { Toaster } from "react-hot-toast";
 import AModal from "./components/addModal";
 import UModal from "./components/updateModal";
 import DModal from "./components/deleteModal";
+import Loading from "../components/loading";
 
 export default function Home() {
   const [showUser, setUser] = useState("MomoDev");
+  const [loading, setLoading] = useState(true);
   const [showAModal, setShowAModal] = useState(false);
   const [showUModal, setShowUModal] = useState(false);
   const [showDModal, setShowDModal] = useState(false);
@@ -41,10 +43,14 @@ export default function Home() {
     const data = await res.json();
     if (Array.isArray(data)) {
       setFiles(data);
+      setLoading(false);
     } else {
       console.error("Expected an array but got", data);
     }
   };
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col bg-violet-200 min-h-[85vh]">

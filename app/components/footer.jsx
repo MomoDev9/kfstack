@@ -4,9 +4,9 @@ export default function Footer() {
       <div className="mx-auto ">
         &copy; {new Date().getFullYear()} This is tasks from{" "}
         <a
-          href="https://github.com/MomoDev9/retail-portofolio"
+          href="https://kelasfullstack.id/"
           target="__blank"
-          className="hover:underline group ml-1 duration-500"
+          className="hover:underline group ml-1 duration-500 text-amber-500"
         >
           KelasFullstack
         </a>{" "}

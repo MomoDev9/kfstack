@@ -1,28 +1,62 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
+
+import MenuCard from "./components/menuCard";
 import Header from "./components/header";
-import Image from "next/image";
+import Footer from "./components/footer";
+import { tasks, miniEvents } from "./components/data";
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState(null);
+
+  const handleToggleSection = (section) => {
+    setActiveSection((prev) => (prev === section ? null : section));
+  };
+
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-between">
-        <Link href="/gallery">
-          <img src="https://cdn.icon-icons.com/icons2/2444/PNG/512/galery_image_photo_picture_icon_148669.png" />
-          gallery
-        </Link>
-        <Link href="/blog">
-          <img src="http://blog.sribu.com/wp-content/uploads/2014/05/blog-icon.png" />
-          blog
-        </Link>
-        <Link href="/maze">
-          <img src="https://imghost.net/ib/tvJXz73VJdohtfo_1723066424.png" />
-          maze
-        </Link>
-        <Link href="/blog">
-          <img src="https://imghost.net/ib/hm8czNy2fokUXba_1723066155.jpg" />
-          anibox
-        </Link>
+      <Header />
+      <main className="container mx-auto px-4 py-6 min-h-[80vh]">
+        <h1
+          className={`flex text-3xl font-bold mb-6 cursor-pointer ${
+            activeSection === "tasks"
+              ? "bg-gray-300 text-black"
+              : "bg-gray-700 text-gray-200"
+          } p-4 rounded justify-between`}
+          onClick={() => handleToggleSection("tasks")}
+        >
+          Task {activeSection === "tasks" ? <MdExpandLess /> : <MdExpandMore />}
+        </h1>
+        {activeSection === "tasks" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {tasks.map((task) => (
+              <MenuCard key={task.title} {...task} />
+            ))}
+          </div>
+        )}
+
+        <h2
+          className={`flex justify-between text-2xl font-bold mb-6 cursor-pointer mt-8 ${
+            activeSection === "miniEvents"
+              ? "bg-gray-300 text-black"
+              : "bg-gray-700 text-gray-200"
+          } p-4 rounded`}
+          onClick={() => handleToggleSection("miniEvents")}
+        >
+          Mini Events{" "}
+          {activeSection === "tasks" ? <MdExpandLess /> : <MdExpandMore />}
+        </h2>
+        {activeSection === "miniEvents" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {miniEvents.map((event) => (
+              <MenuCard key={event.title} {...event} />
+            ))}
+          </div>
+        )}
       </main>
+      <Footer />
     </>
   );
 }

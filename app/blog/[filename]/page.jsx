@@ -7,9 +7,11 @@ import matter from "gray-matter";
 import MarkdownRenderer from "../components/markdownRenderer";
 import OtherPosts from "../components/otherPost";
 import Head from "next/head";
+import Loading from "../../components/loading";
 
 export default function PostPage() {
   const { filename } = useParams();
+  const [loading, setLoading] = useState(true);
   const [file, setFile] = useState(null);
 
   useEffect(() => {
@@ -24,13 +26,14 @@ export default function PostPage() {
       const data = await res.json();
       setFile(data);
       document.title = data.data.title;
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch markdown file", error);
     }
   };
 
-  if (!file) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Loading />;
   }
 
   const { data, content } = matter(file);
