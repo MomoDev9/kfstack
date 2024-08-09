@@ -36,7 +36,7 @@ export default function Details() {
 
   if (loading) return <Loading />;
   if (error) return <p>Error: {error}</p>;
-  if (!data) return <p>No data found</p>;
+  if (!data) return <p>No data found for {id}</p>;
 
   const {
     title,
