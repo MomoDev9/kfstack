@@ -1,8 +1,24 @@
+"use client";
+import { useSession, signIn, signOut } from "next-auth/react";
+
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Btn from "./btn";
 
 export default function Login() {
+  const { data: session } = useSession();
+
+  if (session) {
+    return (
+      <div>
+        <p>Welcome, {session.user.name}!</p>
+        <button onClick={() => signOut()} className="btn bg-red-600 text-white">
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -32,23 +48,7 @@ export default function Login() {
               className="h-10 w-full"
               autoComplete="current-password"
             />
-            <div className="flex flex-row space-x-3 my-3">
-              <Btn
-                text="Facebook"
-                col1="bg-indigo-600"
-                col2="bg-amber-400"
-                colHover="bg-amber-400"
-                colText="text-white"
-                colTextHover="text-white"
-              />
-              <Btn
-                text="Google"
-                col1="bg-amber-400"
-                col2="bg-indigo-600"
-                colHover="bg-indigo-700"
-                colText="text-white"
-              />
-            </div>
+
             <Btn
               text="Login"
               col1="bg-indigo-500"
@@ -57,6 +57,27 @@ export default function Login() {
               colText="text-white"
             />
           </form>
+          <div className="flex flex-row space-x-3 my-3">
+            <Btn
+              text="Facebook"
+              col1="bg-indigo-600"
+              col2="bg-amber-400"
+              colHover="bg-amber-400"
+              colText="text-white"
+              colTextHover="text-white"
+              onClick={() => {
+                console.log("Facebook sign-in button clicked");
+                signIn("facebook");
+              }}
+            />
+            <Btn
+              text="Google"
+              col1="bg-amber-400"
+              col2="bg-indigo-600"
+              colHover="bg-indigo-700"
+              colText="text-white"
+            />
+          </div>
         </div>
       </main>
       <Footer />

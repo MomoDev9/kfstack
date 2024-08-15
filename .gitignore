@@ -43,3 +43,5 @@ kf
 
 # markdown
 /markdowns/*.md
+
+.vercel

@@ -8,7 +8,7 @@ export default function Btn({
   colTextHover,
 }) {
   return (
-    <button className="relative inline-block text-lg group">
+    <button className="relative inline-block text-lg group" onClick={onClick}>
       <span
         className={`relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight ${colText} transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:${colHover} group-hover:${colTextHover}`}
       >

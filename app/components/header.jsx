@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Home({ home }) {
+  const { data: session } = useSession();
   return (
     <header>
       <div className="flex flex-row bg-indigo-500 max-w-screen justify-between items-center h-20">
@@ -8,7 +11,7 @@ export default function Home({ home }) {
           href="/"
           className="bg-indigo-100 bg-opacity-10 ml-5 rounded-full"
         >
-          <img src="/logo.png" alt="MomoDev" className="w-20" />
+          <img src="/logo.png" alt="MomoDev" className="w-15 h-15" />
         </Link>
         <div className="text-white text-2xl mr-5">
           <ul className="flex flex-row gap-3">
@@ -19,9 +22,16 @@ export default function Home({ home }) {
             <a href="https://MomoDev.vercel.app">
               <li>About</li>
             </a>
-            <Link href="/login">
-              <li>Login</li>
-            </Link>
+            {!session ? (
+              <Link href="/login">
+                <li>Login</li>
+              </Link>
+            ) : (
+              <img
+                src={session.user.image}
+                className="w-10 h-10 rounded-full"
+              />
+            )}
           </ul>
         </div>
       </div>
