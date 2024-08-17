@@ -1,8 +1,10 @@
+"use client";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 export default function UpdateModal({ filename, onClose, setRefresh }) {
-  const [fileData, setFileData] = useState(null);
+  const { data: session } = useSession();
   const [author, setAuthor] = useState("MomoDev");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -20,7 +22,6 @@ export default function UpdateModal({ filename, onClose, setRefresh }) {
     try {
       const res = await fetch(`/blog/markdown/${filename}`);
       const data = await res.json();
-      setFileData(data);
       setTitle(data.data.title);
       setAuthor(data.data.author);
       setContent(data.content);
@@ -33,6 +34,7 @@ export default function UpdateModal({ filename, onClose, setRefresh }) {
     }
   };
   const updatePost = async () => {
+    setAuthor(session.user.name);
     try {
       const response = await fetch("/blog/markdown", {
         method: "PUT",

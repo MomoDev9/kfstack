@@ -27,10 +27,17 @@ export default function Home({ home }) {
                 <li>Login</li>
               </Link>
             ) : (
-              <img
-                src={session.user.image}
-                className="w-10 h-10 rounded-full"
-              />
+              <>
+                {session.user.image ? (
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <p>{session.user.name}</p>
+                )}
+              </>
             )}
           </ul>
         </div>

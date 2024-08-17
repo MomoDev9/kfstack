@@ -1,28 +1,30 @@
 "use client";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Btn from "./btn";
 
-export default function Login() {
+export default function Register() {
   const { data: session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
     });
 
-    if (result.error) {
-      alert(result.error);
+    if (response.ok) {
+      const user = await response.json();
+      console.log("User registered:", user);
     } else {
-      window.location.href = "/";
+      console.error("Failed to register");
     }
   };
 
@@ -42,8 +44,22 @@ export default function Login() {
       <Header />
       <main className="flex  justify-center items-center min-h-[85vh]">
         <div className="flex flex-col bg-indigo-300  shadow-indigo-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.38)]">
-          <h1 className="text-4xl font-bold text-white ml-5 mt-5">Login</h1>
-          <form className="flex flex-col p-5" onSubmit={handleLogin}>
+          <h1 className="text-4xl font-bold text-white ml-5 mt-5">Register</h1>
+          <form className="flex flex-col p-5" onSubmit={handleRegister}>
+            <label htmlFor="name" className="mx-2 mt-5">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Your Name"
+              className="h-10 w-full"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
             <label htmlFor="email" className="mx-2 mt-5">
               Email
             </label>
@@ -51,7 +67,7 @@ export default function Login() {
               type="text"
               name="email"
               id="email"
-              placeholder="Your Email"
+              placeholder="Your email"
               className="h-10 w-full"
               autoComplete="email"
               value={email}
@@ -74,7 +90,7 @@ export default function Login() {
             />
 
             <Btn
-              text="Login"
+              text="Register"
               col1="bg-indigo-500"
               col2="bg-gray-700"
               colHover="bg-indigo-700"
@@ -90,7 +106,6 @@ export default function Login() {
               colText="text-white"
               colTextHover="text-white"
               onClick={() => {
-                console.log("Facebook sign-in button clicked");
                 signIn("facebook");
               }}
             />

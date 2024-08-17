@@ -1,11 +1,12 @@
 "use client";
-
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { MdEditor, ModalToolbar } from "md-editor-rt";
 import { Toaster, toast } from "react-hot-toast";
 import "md-editor-rt/lib/style.css";
 
 export default function Home({ onClose, setRefresh }) {
+  const { data: session } = useSession();
   const [author, setAuthor] = useState("MomoDev");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -13,6 +14,7 @@ export default function Home({ onClose, setRefresh }) {
   const [thumbnail, setThumbnail] = useState("");
 
   const createFile = async () => {
+    setAuthor(session.user.name);
     const res = await fetch("/blog/markdown", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
