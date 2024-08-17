@@ -14,7 +14,7 @@ export const tasks = [
     image: "http://blog.sribu.com/wp-content/uploads/2014/05/blog-icon.png",
     subtitle: "Task 2",
     description:
-      "what i do is just convert the UI design and make some CRUD operation for Blog",
+      "what i do is just convert the UI design, auth functions & make some CRUD operation for Blog",
   },
   {
     title: "Maze Game",
@@ -29,7 +29,7 @@ export const tasks = [
     title: "Anibox",
     link: "/anibox",
     image: "https://imghost.net/ib/hm8czNy2fokUXba_1723066155.jpg",
-    subtitle: "Task 4",
+    subtitle: "Task 5",
     description:
       "Anime Database, what i do is just convert some logic to Next/React js and complete some functions for fetch API",
   },
@@ -37,10 +37,9 @@ export const tasks = [
 
 export const miniEvents = [
   {
-    title: "Task 3",
-    link: "/gallery",
-    image:
-      "https://staticg.sportskeeda.com/editor/2024/06/f2a63-17193889916685-1920.jpg",
+    title: "Level Up 1",
+    link: "https://momo-kfme.vercel.app/level1",
+    image: "https://imghost.net/ib/CllbpGcCTw7YA3r_1723910786.png",
     description: "Description 3",
   },
 ];

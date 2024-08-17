@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VscEdit } from "react-icons/vsc";
 import { Toaster } from "react-hot-toast";
@@ -19,6 +20,7 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [updateData, setUpdateData] = useState(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     fetchFiles();
@@ -54,15 +56,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col bg-violet-200 min-h-[85vh]">
-      <div
-        className="flex cursor-pointer mx-auto bg-indigo-300 p-5 text-white text-lg font-bold my-10 ml-5"
-        onClick={showAddModal}
-        aria-label="Tambah Post"
-      >
-        Create Post +
-      </div>
-      <div className="flex flex-col mx-auto px-4 bg-violet-200">
-        <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-10 ">
+      {session && (
+        <div
+          className="flex cursor-pointer mx-auto bg-indigo-300 p-5 text-white text-lg font-bold my-10 ml-5"
+          onClick={showAddModal}
+          aria-label="Tambah Post"
+        >
+          Create Post +
+        </div>
+      )}
+      <div className="flex flex-col mx-auto px-4 bg-violet-200 mt-5">
+        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 ">
           {files.map((file) => (
             <li key={file.filename}>
               <Link href={`/blog/${file.filename.replace(".md", "")}`}>
@@ -72,24 +76,33 @@ export default function Home() {
                   className="w-[200px] h-40 object-cover rounded-t-xl hover:rounded-none hover:scale-125 transition-transform duration-300"
                 />
               </Link>
-              <button
-                onClick={() => showEditModal(file.filename.replace(".md", ""))}
-                className="bg-green-300 rounded-bl-xl text-xl hover:bg-green-500"
-              >
-                <VscEdit className="h-10 w-[100px]" />
-              </button>
-              <button
-                // onClick={deletePost.bind(null, file.filename, file.sha)}
-                onClick={() =>
-                  showDeleteModal({
-                    filename: file.filename,
-                    sha: file.sha,
-                  })
-                }
-                className="bg-red-300 rounded-br-xl text-2xl hover:bg-red-500"
-              >
-                <RiDeleteBin6Line className="h-10 w-[100px]" />
-              </button>
+              {session ? (
+                <>
+                  <button
+                    onClick={() =>
+                      showEditModal(file.filename.replace(".md", ""))
+                    }
+                    className="bg-green-300 rounded-bl-xl text-xl hover:bg-green-500"
+                  >
+                    <VscEdit className="h-10 w-[100px]" />
+                  </button>
+                  <button
+                    onClick={() =>
+                      showDeleteModal({
+                        filename: file.filename,
+                        sha: file.sha,
+                      })
+                    }
+                    className="bg-red-300 rounded-br-xl text-2xl hover:bg-red-500"
+                  >
+                    <RiDeleteBin6Line className="h-10 w-[100px]" />
+                  </button>
+                </>
+              ) : (
+                <div className="flex bg-green-300 w-[200px] h-10 overflow-hidden items-center rounded-b-xl">
+                  <p className="truncate mx-auto">{file.title}</p>
+                </div>
+              )}
               <div></div>
             </li>
           ))}
