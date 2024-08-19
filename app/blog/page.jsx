@@ -50,6 +50,7 @@ export default function Home() {
       console.error("Expected an array but got", data);
     }
   };
+
   if (loading) {
     return <Loading />;
   }

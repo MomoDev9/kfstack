@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import path from "path";
 import matter from "gray-matter";
 import slugify from "slugify";
 import axios from "axios";
-import { title } from "process";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO;

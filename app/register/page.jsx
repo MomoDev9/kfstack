@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Btn from "./btn";
+import Btn from "../components/btn";
 
 export default function Register() {
   const { data: session } = useSession();
@@ -89,15 +89,26 @@ export default function Register() {
               required
             />
 
-            <Btn
-              text="Register"
-              col1="bg-indigo-500"
-              col2="bg-gray-700"
-              colHover="bg-indigo-700"
-              colText="text-white"
-            />
+            <div className="flex justify-center mt-4 w-full">
+              <Btn
+                text="Register"
+                col1="bg-indigo-500"
+                col2="bg-gray-700"
+                colHover="bg-indigo-700"
+                colText="text-white"
+              />
+            </div>
           </form>
-          <div className="flex flex-row space-x-3 my-3 p-5">
+
+          <div className="my-1 flex items-center">
+            <div className="flex-grow border-t border-white"></div>
+            <span className="mx-4 text-black">
+              Or <span className="hidden lg:inline">Register With</span>
+            </span>
+            <div className="flex-grow border-t border-white"></div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3  my-3 p-5">
             <Btn
               text="Facebook"
               col1="bg-indigo-600"

@@ -23,7 +23,7 @@ export default function UpdateModal({ filename, onClose, setRefresh }) {
       const res = await fetch(`/blog/markdown/${filename}`);
       const data = await res.json();
       setTitle(data.data.title);
-      setAuthor(data.data.author);
+      setAuthor(session.user.name);
       setContent(data.content);
       setBanner(data.data.banner);
       setThumbnail(data.data.thumbnail);
@@ -34,7 +34,6 @@ export default function UpdateModal({ filename, onClose, setRefresh }) {
     }
   };
   const updatePost = async () => {
-    setAuthor(session.user.name);
     try {
       const response = await fetch("/blog/markdown", {
         method: "PUT",
@@ -53,7 +52,7 @@ export default function UpdateModal({ filename, onClose, setRefresh }) {
       });
 
       if (response.ok) {
-        toast.success(filename + " updated successfully");
+        toast.success(title.substring(0, 10) + "... updated successfully");
         setRefresh((prev) => !prev);
         onClose();
       } else {
