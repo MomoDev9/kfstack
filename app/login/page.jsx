@@ -1,11 +1,11 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
+import Link from "next/link";
 
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Btn from "../components/btn";
-import Link from "next/link";
 
 export default function Login() {
   const { data: session } = useSession();
@@ -116,7 +116,7 @@ export default function Login() {
           </div>
 
           <div className="my-1 flex items-center justify-center">
-            <span>Don't have an account?</span>
+            <span>Don&#39;t have an account?</span>
             <Link
               href="/register"
               className="ml-1 text-white hover:text-blue-500 hover:underline"

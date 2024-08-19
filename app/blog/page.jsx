@@ -12,7 +12,6 @@ import DModal from "./components/deleteModal";
 import Loading from "../components/loading";
 
 export default function Home() {
-  const [showUser, setUser] = useState("MomoDev");
   const [loading, setLoading] = useState(true);
   const [showAModal, setShowAModal] = useState(false);
   const [showUModal, setShowUModal] = useState(false);
@@ -20,7 +19,7 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [updateData, setUpdateData] = useState(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     fetchFiles();
@@ -51,7 +50,7 @@ export default function Home() {
     }
   };
 
-  if (loading) {
+  if (loading || status === "loading") {
     return <Loading />;
   }
 

@@ -3,77 +3,68 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import TodoItem from "./todoItem";
+
+const items = [
+  {
+    id: 1,
+    task: "Belajar Javascript",
+    completed: true,
+    created_at: "2024-08-05T15:00:00Z",
+    updated_at: "2024-08-05T16:00:00Z",
+  },
+  {
+    id: 2,
+    task: "Belajar HTML",
+    completed: true,
+    created_at: "2024-08-05T15:00:00Z",
+    updated_at: "2024-08-05T16:00:00Z",
+  },
+  {
+    id: 3,
+    task: "Mencoba Tailwind CSS",
+    completed: false,
+    created_at: "2024-08-06T09:00:00Z",
+    updated_at: "2024-08-06T09:00:00Z",
+  },
+];
 export default function NoSession() {
-  const [todos, setTodos] = useState(["Belajar Javascript", "Belajar HTML"]);
+  const [todos, setTodos] = useState(items);
   const [newTodo, setNewTodo] = useState("");
   const [refresh, setRefresh] = useState(false);
 
-  useEffect(() => {
-    fetchTodos();
-  }, [refresh]);
-
-  const fetchTodos = async () => {
-    try {
-      const response = await fetch("/todo/api/noSession");
-      const data = await response.json();
-      console.log(data);
-      setTodos(data);
-    } catch (error) {
-      console.error(error.message);
-    }
+  const addTodo = (todo) => {
+    const updatedTodos = {
+      id: todos.length + 1,
+      task: todo,
+      completed: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setNewTodo("");
+    setTodos([...todos, updatedTodos]);
   };
 
-  const addTodo = async (newTodo) => {
-    if (!newTodo.trim()) {
-      console.error("Todo cannot be empty");
-      return;
-    }
-
-    try {
-      const response = await axios.post("/todo/api/noSession", {
-        id: todos.length + 1,
-        task: newTodo,
+  const editTodo = (todos, index) => {
+    const newTodo = prompt(
+      "Masukkan todo baru:",
+      (todos[index].task = {
+        id: todos[index].id,
+        task: todos[index].task,
         completed: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      });
-
-      console.log(response.data.message);
-      setNewTodo("");
-      setRefresh((prev) => !prev);
-    } catch (error) {
-      console.error(
-        "Failed to add todo",
-        error.response ? error.response.data : error.message
-      );
-    }
-  };
-  const deleteTodo = async (newTodo) => {
-    const res = await fetch("/todo/api/noSession", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ newTodo }),
-    });
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setTodos(data);
-    } else {
-      console.error("Expected an array but got", data);
+      })
+    );
+    if (newTodo) {
+      const updatedTodos = [...todos];
+      updatedTodos[index] = newTodo;
+      setTodos(updatedTodos);
     }
   };
 
-  const editTodo = async (newTodo) => {
-    const res = await fetch("/todo/api/noSession", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ newTodo }),
-    });
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setTodos(data);
-    } else {
-      console.error("Expected an array but got", data);
-    }
+  const deleteTodo = (index) => {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);
   };
 
   return (
