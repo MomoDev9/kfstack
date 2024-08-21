@@ -15,15 +15,13 @@ const headers = {
 //   Accept: "application/vnd.github.v3+json",
 // };
 
-const createFile = async (user) => {
+const createFile = async (user, newContent) => {
   try {
-    const initialContent = JSON.stringify([]);
-    const encodedContent = Buffer.from(initialContent).toString("base64");
     const response = await axios.put(
       filePath(user),
       {
         message: "Create new todo file",
-        content: encodedContent,
+        content: newContent,
       },
       { headers }
     );
@@ -58,28 +56,9 @@ export async function GET(req) {
     );
     return NextResponse.json(
       { error: "Failed to fetch files" },
-      { status: 500 }
+      { status: error.response ? error.response.status : 500 }
     );
   }
-  // try {
-  //   const res = await axios.get(GITHUB_API_URL, { headers });
-
-  //   const base64Content = res.data.content;
-  //   const getContent = Buffer.from(base64Content, "base64").toString("utf-8");
-
-  //   const items = JSON.parse(getContent);
-
-  //   return NextResponse.json(items, { status: 200 });
-  // } catch (error) {
-  //   console.error(
-  //     "Failed to fetch files",
-  //     error.response ? error.response.data : error.message
-  //   );
-  //   return NextResponse.json(
-  //     { error: "Failed to fetch files" },
-  //     { status: 500 }
-  //   );
-  // }
 }
 
 export async function POST(req) {
@@ -118,8 +97,10 @@ export async function POST(req) {
       );
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // File not found, create it
-        await createFile(user);
+        const newContent = Buffer.from(JSON.stringify([newTodo])).toString(
+          "base64"
+        );
+        await createFile(user, newContent);
         return NextResponse.json([], { status: 200 });
       } else {
         throw error;
@@ -134,38 +115,35 @@ export async function POST(req) {
   }
 }
 
-export async function PUT(req, { params }) {
+export async function PUT(req) {
   try {
-    const userId = req.headers.get("userId"); // Retrieve username from request headers or session
-    const GITHUB_API_URL = filePath(userId);
-    const { id } = params;
-    const updatedTodo = await req.json();
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id");
+    const user = url.searchParams.get("user");
+    const updatedData = await req.json();
 
-    // Fetch current todos from GitHub
-    const response = await axios.get(GITHUB_API_URL, { headersPOST });
+    const GITHUB_API_URL = filePath(user);
+    const response = await axios.get(GITHUB_API_URL, { headers });
     const fileContent = Buffer.from(response.data.content, "base64").toString(
       "utf-8"
     );
-    const todos = JSON.parse(fileContent);
+    const items = JSON.parse(fileContent);
 
     // Find and update the todo item
-    const index = todos.findIndex((todo) => todo.id === parseInt(id, 10));
+    const index = items.findIndex((item) => item.id === parseInt(id, 10));
     if (index === -1) {
       return NextResponse.json({ error: "Todo not found" }, { status: 404 });
     }
-    todos[index] = { ...todos[index], ...updatedTodo };
+    items[index] = { ...items[index], ...updatedData, id: parseInt(id, 10) };
 
-    // Convert updated todos to JSON and encode in base64
-    const updatedContent = Buffer.from(JSON.stringify(todos)).toString(
-      "base64"
-    );
+    const newContent = Buffer.from(JSON.stringify(items)).toString("base64");
 
     // Update the file on GitHub
     await axios.put(
       GITHUB_API_URL,
       {
         message: "Update todo",
-        content: updatedContent,
+        content: newContent,
         sha: response.data.sha,
       },
       { headers }
@@ -182,6 +160,55 @@ export async function PUT(req, { params }) {
     );
     return NextResponse.json(
       { error: "Failed to update todo" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const url = new URL(req.url);
+    const user = url.searchParams.get("user");
+    const id = url.searchParams.get("id");
+    const GITHUB_API_URL = filePath(user);
+
+    // Fetch current todos from GitHub
+    const response = await axios.get(GITHUB_API_URL, { headers });
+    const fileContent = Buffer.from(response.data.content, "base64").toString(
+      "utf-8"
+    );
+    const todos = JSON.parse(fileContent);
+
+    // Find and remove the todo item
+    const updatedTodos = todos.filter((todo) => todo.id !== parseInt(id, 10));
+
+    // Convert updated todos to JSON and encode in base64
+    const newContent = Buffer.from(JSON.stringify(updatedTodos)).toString(
+      "base64"
+    );
+
+    // Update the file on GitHub
+    await axios.put(
+      GITHUB_API_URL,
+      {
+        message: "Delete todo",
+        content: newContent,
+        sha: response.data.sha,
+      },
+      { headers }
+    );
+
+    return NextResponse.json(
+      { message: "Todo deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(
+      "Failed to delete todo",
+      error.response ? error.response.data : error.message
+    );
+    return NextResponse.json(
+      { error: "Failed to delete todo" },
       { status: 500 }
     );
   }

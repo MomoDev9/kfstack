@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -11,6 +12,8 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const router = useRouter();
+  const callbackUrl = router.back() || "/login";
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -22,6 +25,7 @@ export default function Register() {
 
     if (response.ok) {
       const user = await response.json();
+      router.push(callbackUrl);
       console.log("User registered:", user);
     } else {
       console.error("Failed to register");

@@ -1,6 +1,7 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import Header from "../components/header";
@@ -11,6 +12,7 @@ export default function Login() {
   const { data: session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ export default function Login() {
     if (result.error) {
       alert(result.error);
     } else {
-      window.location.href = "/";
+      router.back();
     }
   };
 

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { IoMdAdd } from "react-icons/io";
 
 import TodoItem from "./todoItem";
 
@@ -30,7 +30,6 @@ const items = [
 export default function NoSession() {
   const [todos, setTodos] = useState(items);
   const [newTodo, setNewTodo] = useState("");
-  const [refresh, setRefresh] = useState(false);
 
   const addTodo = (todo) => {
     const updatedTodos = {
@@ -81,7 +80,7 @@ export default function NoSession() {
           onClick={() => addTodo(newTodo)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          +
+          <IoMdAdd className="w-8 h-8" />
         </button>
       </div>
       <TodoItem todos={todos} onEdit={editTodo} onDelete={deleteTodo} />
