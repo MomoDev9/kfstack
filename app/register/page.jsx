@@ -13,7 +13,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const router = useRouter();
-  const callbackUrl = router.back() || "/login";
+  const callbackUrl = "/login";
 
   const handleRegister = async (e) => {
     e.preventDefault();
