@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Head() {
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const searchInput = document.getElementById("search-navbar");
@@ -13,9 +15,7 @@ export default function Head() {
         let searchKeyword = searchInput.value.trim();
 
         if (searchKeyword.length > 0) {
-          window.location.href = `/anibox/search?q=${encodeURIComponent(
-            searchKeyword
-          )}`;
+          router.push(`/anibox/search?q=${encodeURIComponent(searchKeyword)}`);
         }
       }
     };

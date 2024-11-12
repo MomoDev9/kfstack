@@ -24,7 +24,14 @@ export const tasks = [
     description:
       "what i do is just convert some logic to Next/React js and complete some functions for Maze Game",
   },
-  //t4 todo
+  {
+    title: "To Do List",
+    link: "/todo",
+    image: "https://imghost.net/ib/tvJXz73VJdohtfo_1723066424.png",
+    subtitle: "Task 4",
+    description:
+      "what i do is just convert some logic to Next/React js and complete some functions for Maze Game",
+  },
   {
     title: "Anibox",
     link: "/anibox",
